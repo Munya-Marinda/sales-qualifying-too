@@ -1,0 +1,615 @@
+<?php
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>Dashboard - Sales Qualifying Tool</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon" />
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- CUSTOM CSSS -->
+    <style>
+        #tool_SQ_body {
+            display: flex;
+            font-size: 20px;
+            position: relative;
+            align-items: center;
+            flex-direction: column;
+            background-color: white;
+            justify-content: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        #tool_SQ_parent {
+            /* width: 100vw; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 140px;
+            max-width: 1000px;
+        }
+
+        #tool_SQ_sub_parent {
+            width: 100vw;
+        }
+
+        .tool_SQ_table {
+            width: 100%;
+            /* font-size: 1em; */
+            margin-bottom: 130px;
+        }
+
+        .tool_SQ_table thead tr td,
+        .tool_SQ_table tbody td {
+            padding: 25px 50px;
+        }
+
+        .tool_SQ_table thead tr td {
+            /* FONT */
+            font-weight: bold;
+            background-color: #f4f4f4;
+        }
+
+        .tool_SQ_table tbody td {
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        .tool_SQ_table tbody tr {
+            border: 5px solid white;
+        }
+
+        .tool_SQ_table tbody tr:hover td {
+            background-color: #ebf1f2;
+        }
+
+        #tool_SQ_output>span {
+            text-transform: uppercase;
+            /* font-size: 40px; */
+        }
+
+
+        #tool_SQ_output_calculation {
+            /* font-size: 2em; */
+            margin: 30px 40px 30px 0px;
+        }
+
+        #tool_SQ_output {
+            /* font-size: 3.5em; */
+            margin: 30px 0px 30px 40px;
+        }
+
+        #tool_SQ_output_parent {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            margin: 0;
+            /* padding: 30px 20px; */
+            width: 100%;
+            background-color: gray;
+            color: white;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+
+
+
+        #debbuger_window {
+            position: fixed;
+            top: 570px;
+            right: 25px;
+            background-color: white;
+            box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            /* font-size: 16px; */
+            font-family: monospace;
+            display: none;
+        }
+
+        /*
+*      -----------==================================================
+*      -----------=============================================
+*      -----------==========================================
+*/
+
+        @media (min-width: 900px) {
+
+            .tool_SQ_table thead tr td,
+            .tool_SQ_table tbody td {
+                padding: 15px 20px;
+            }
+
+            .tool_SQ_table {
+                margin-bottom: 0px;
+            }
+        }
+
+        /* @media (max-width: 600px) {
+} */
+
+        /* 
+*      -----------==================================================
+*      -----------=============================================
+*      -----------==========================================
+*/
+    </style>
+
+</head>
+
+<body id="tool_SQ_body">
+
+    <div id="tool_SQ_output_parent">
+        <span id="tool_SQ_output">
+            0 <span>/250 POINTS</span>
+        </span>
+        <span id="tool_SQ_output_calculation">
+            0 + 0 + 0 + 0 + 0 + (0)
+        </span>
+    </div>
+
+    <div id="tool_SQ_parent">
+
+        <div id="tool_SQ_sub_parent">
+
+            <form id="tool_SQ_options">
+
+                <!--  -->
+
+                <table class="tool_SQ_table" id="tool_SQ_discount">
+                    <thead>
+                        <tr>
+                            <td>
+                                Discount
+                            </td>
+                            <td>
+                                Points
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="tool_SQ_discount_tr" id="tool_SQ_discount_tr_1" onclick="AddValue(this,'discount', 30)">
+                            <td>60%</td>
+                            <td>30</td>
+                        </tr>
+                        <tr class="tool_SQ_discount_tr" id="tool_SQ_discount_tr_2" onclick="AddValue(this,'discount', 25)">
+                            <td>51 - 59%</td>
+                            <td>25</td>
+                        </tr>
+                        <tr class="tool_SQ_discount_tr" id="tool_SQ_discount_tr_3" onclick="AddValue(this,'discount', 20)">
+                            <td>35 - 49%</td>
+                            <td>20</td>
+                        </tr>
+                        <tr class="tool_SQ_discount_tr" id="tool_SQ_discount_tr_4" onclick="AddValue(this,'discount', 15)">
+                            <td>20 - 34%</td>
+                            <td>15</td>
+                        </tr>
+                        <tr class="tool_SQ_discount_tr" id="tool_SQ_discount_tr_5" onclick="AddValue(this,'discount', 10)">
+                            <td>15 - 19%</td>
+                            <td>10</td>
+                        </tr>
+                        <tr class="tool_SQ_discount_tr" id="tool_SQ_discount_tr_6" onclick="AddValue(this,'discount', 0)">
+                            <td>Under 15%</td>
+                            <td>0</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <br />
+                <br />
+
+                <!-- <select name="tool_SQ_validity" id="tool_SQ_validity">
+
+          <option>Validity</option>
+          <option>6+ months</option>
+          <option>4 - 5 months</option>
+          <option>3 months (standard)</option>
+          <option>2 months or less</option>
+          <option>1 month</option>
+
+        </select> -->
+
+                <table class="tool_SQ_table" id="tool_SQ_validity">
+                    <thead>
+                        <tr>
+                            <td>
+                                Validity
+                            </td>
+                            <td>
+                                Points
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="tool_SQ_validity_tr" id="tool_SQ_validity_tr_1" onclick="AddValue(this,'validity', 40)">
+                            <td>6+ months</td>
+                            <td>40</td>
+                        </tr>
+                        <tr class="tool_SQ_validity_tr" id="tool_SQ_validity_tr_2" onclick="AddValue(this,'validity', 30)">
+                            <td>4 - 5 months</td>
+                            <td>30</td>
+                        </tr>
+                        <tr class="tool_SQ_validity_tr" id="tool_SQ_validity_tr_3" onclick="AddValue(this,'validity', 20)">
+                            <td>3 months (standard)</td>
+                            <td>20</td>
+                        </tr>
+                        <tr class="tool_SQ_validity_tr" id="tool_SQ_validity_tr_4" onclick="AddValue(this,'validity', 10)">
+                            <td>2 months or less</td>
+                            <td>10</td>
+                        </tr>
+                        <tr class="tool_SQ_validity_tr" id="tool_SQ_validity_tr_5" onclick="AddValue(this,'validity', 0)">
+                            <td>1 month</td>
+                            <td>0</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <br />
+                <br />
+
+                <!-- <select name="tool_SQ_commission_margin" id="tool_SQ_commission_margin">
+
+          <option>Exclusivity i.e. deal</option>
+          <option>25% +</option>
+          <option>20 - 24%+</option>
+          <option>15 - 19%</option>
+          <option>10 - 14%</option>
+          <option>Under 10%</option>
+
+        </select> -->
+
+                <table class="tool_SQ_table" id="tool_SQ_excl">
+                    <thead>
+                        <tr>
+                            <td>
+                                Exclusivity i.e. deal
+                            </td>
+                            <td>
+                                Points
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="tool_SQ_excl_tr" id="tool_SQ_excl_tr_1" onclick="AddValue(this,'excl', 70)">
+                            <td>Yes</td>
+                            <td>70</td>
+                        </tr>
+                        <tr class="tool_SQ_excl_tr" id="tool_SQ_excl_tr_2" onclick="AddValue(this,'excl', 30)">
+                            <td>No</td>
+                            <td>30</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <br />
+                <br />
+
+                <!-- <select name="tool_SQ_commission_margin" id="tool_SQ_commission_margin">
+
+          <option>Commission / Margin</option>
+          <option>25% +</option>
+          <option>20 - 24%+</option>
+          <option>15 - 19%</option>
+          <option>10 - 14%</option>
+          <option>Under 10%</option>
+
+        </select> -->
+
+
+                <table class="tool_SQ_table" id="tool_SQ_commission_margin">
+                    <thead>
+                        <tr>
+                            <td>
+                                Commission / Margin
+                            </td>
+                            <td>
+                                Points
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="tool_SQ_commission_margin_tr" id="tool_SQ_commission_margin_tr_1" onclick="AddValue(this,'commission_margin', 40)">
+                            <td>25% +</td>
+                            <td>40</td>
+                        </tr>
+                        <tr class="tool_SQ_commission_margin_tr" id="tool_SQ_commission_margin_tr_2" onclick="AddValue(this,'commission_margin', 30)">
+                            <td>20 - 24%+</td>
+                            <td>30</td>
+                        </tr>
+                        <tr class="tool_SQ_commission_margin_tr" id="tool_SQ_commission_margin_tr_3" onclick="AddValue(this,'commission_margin', 20)">
+                            <td>15 - 19%</td>
+                            <td>20</td>
+                        </tr>
+                        <tr class="tool_SQ_commission_margin_tr" id="tool_SQ_commission_margin_tr_4" onclick="AddValue(this,'commission_margin', 10)">
+                            <td>10 - 14%</td>
+                            <td>10</td>
+                        </tr>
+                        <tr class="tool_SQ_commission_margin_tr" id="tool_SQ_commission_margin_tr_5" onclick="AddValue(this,'commission_margin', 0)">
+                            <td>Under 10%</td>
+                            <td>0</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <br />
+                <br />
+
+                <!-- <select name="tool_SQ_merchant_type" id="tool_SQ_merchant_type">
+
+          <option>Merchant type</option>
+          <option>New</option>
+          <option>Repeat</option>
+
+        </select> -->
+
+                <table class="tool_SQ_table" id="tool_SQ_merchant_type">
+                    <thead>
+                        <tr>
+                            <td>
+                                Merchant type
+                            </td>
+                            <td>
+                                Points
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="tool_SQ_merchant_type" id="tool_SQ_merchant_type_tr_1" onclick="AddValue(this,'merchant_type', 70)">
+                            <td>New</td>
+                            <td>70</td>
+                            </tr_tr>
+
+                        <tr class="tool_SQ_merchant_type" id="tool_SQ_merchant_type_tr_2" onclick="AddValue(this,'merchant_type', 30)">
+                            <td>Repeat</td>
+                            <td>30</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <br />
+                <br />
+
+                <br />
+                <br />
+
+                <table class="tool_SQ_table" id="tool_SQ_poor_digital_presence">
+                    <thead>
+                        <tr>
+                            <td>
+                                Digital presence
+                            </td>
+                            <td>
+                                Points
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="tool_SQ_poor_digital_presence" id="tool_SQ_poor_digital_presence_tr_1" onclick="AddValue(this,'poor_digital_presence', -60)">
+                            <td>Poor/None</td>
+                            <td>-60</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div id="debbuger_window">
+        The "debbuger_window".
+    </div>
+
+    <!-- ================================================================================ -->
+    <!-- ================================================================================ -->
+    <!-- ================================================================================ -->
+    <!-- ================================================================================ -->
+    <!-- ================================================================================ -->
+    <!-- ================================================================================ -->
+    <!-- ================================================================================ -->
+
+    <script>
+        const SQ_VALUES_ARRAY = {
+            "discount": 0,
+            "validity": 0,
+            "excl": 0,
+            "commission_margin": 0,
+            "merchant_type": 0,
+            "poor_digital_presence": 0,
+        };
+
+        const ACTIVE_TR = {
+            "discount": "",
+            "validity": "",
+            "excl": "",
+            "commission_margin": "",
+            "merchant_type": "",
+            "poor_digital_presence": "",
+        };
+
+        //
+        const AddValue = (element, key, value) => {
+
+            // 
+            switch (key) {
+                //
+                case "discount":
+                    if (parseInt(SQ_VALUES_ARRAY["discount"]) === value) {
+                        SQ_VALUES_ARRAY["discount"] = 0;
+                    } else {
+                        SQ_VALUES_ARRAY["discount"] = value;
+                    }
+                    break;
+                    //
+                case "validity":
+                    if (parseInt(SQ_VALUES_ARRAY["validity"]) === value) {
+                        SQ_VALUES_ARRAY["validity"] = 0;
+                    } else {
+                        SQ_VALUES_ARRAY["validity"] = value;
+                    }
+                    break;
+                    //
+                case "excl":
+                    if (parseInt(SQ_VALUES_ARRAY["excl"]) === value) {
+                        SQ_VALUES_ARRAY["excl"] = 0;
+                    } else {
+                        SQ_VALUES_ARRAY["excl"] = value;
+                    }
+                    break;
+                    //
+                case "commission_margin":
+                    if (parseInt(SQ_VALUES_ARRAY["commission_margin"]) === value) {
+                        SQ_VALUES_ARRAY["commission_margin"] = 0;
+                    } else {
+                        SQ_VALUES_ARRAY["commission_margin"] = value;
+                    }
+                    break;
+                    //
+                case "merchant_type":
+                    if (parseInt(SQ_VALUES_ARRAY["merchant_type"]) === value) {
+                        SQ_VALUES_ARRAY["merchant_type"] = 0;
+                    } else {
+                        SQ_VALUES_ARRAY["merchant_type"] = value;
+                    }
+                    break;
+                    //
+                case "poor_digital_presence":
+                    if (parseInt(SQ_VALUES_ARRAY["poor_digital_presence"]) === value) {
+                        SQ_VALUES_ARRAY["poor_digital_presence"] = 0;
+                    } else {
+                        SQ_VALUES_ARRAY["poor_digital_presence"] = value;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            //
+            // add the values
+            var total = parseInt(SQ_VALUES_ARRAY["discount"]) +
+                parseInt(SQ_VALUES_ARRAY["validity"]) +
+                parseInt(SQ_VALUES_ARRAY["excl"]) +
+                parseInt(SQ_VALUES_ARRAY["commission_margin"]) +
+                parseInt(SQ_VALUES_ARRAY["merchant_type"]) +
+                parseInt(SQ_VALUES_ARRAY["poor_digital_presence"]);
+            //
+            document.getElementById('tool_SQ_output').innerHTML = total.toString() + " <span>/250 POINTS</span>";
+
+
+
+
+            const calculation =
+                SQ_VALUES_ARRAY["discount"].toString() + " + " +
+                SQ_VALUES_ARRAY["validity"].toString() + " + " +
+                SQ_VALUES_ARRAY["excl"].toString() + " + " +
+                SQ_VALUES_ARRAY["commission_margin"].toString() + " + " +
+                SQ_VALUES_ARRAY["merchant_type"].toString() + " + (" +
+                SQ_VALUES_ARRAY["poor_digital_presence"].toString() + ")";
+
+            document.getElementById("debbuger_window").innerHTML = calculation + "<br>Total: " + total.toString();
+            document.getElementById("tool_SQ_output_calculation").innerHTML = calculation;
+
+
+
+            //
+            // change ui
+            if (element.nodeName === "TR") {
+                if (element.children.length > 0) {
+                    //
+                    const elementKey = element.id.substring(element.id.indexOf("_SQ_") + 4, element.id.indexOf("_tr_"));
+                    //
+                    if (ACTIVE_TR[elementKey] !== element.id) {
+                        //
+                        ACTIVE_TR[elementKey] = element.id
+                        //
+                        classElements = document.getElementsByClassName(element.className);
+                        //
+                        // change all other elements to inactive
+                        for (let i = 0; i < classElements.length; i++) {
+                            //
+                            if (element.id !== classElements[i].id) {
+                                // make normal
+                                classElements[i].children[0].style.border = "0px";
+                                classElements[i].children[0].style.backgroundColor = "#f9f9f9";
+                                classElements[i].children[0].style.color = "black";
+                                //
+                                classElements[i].children[1].style.border = "0px";
+                                classElements[i].children[1].style.backgroundColor = "#f9f9f9";
+                                classElements[i].children[1].style.color = "black";
+                            } else {
+                                //
+                                classElements[i].children[0].style.borderWidth = "2px 0px 2px 2px";
+                                classElements[i].children[0].style.borderColor = "gray";
+                                classElements[i].children[0].style.borderStyle = "solid";
+                                classElements[i].children[0].style.backgroundColor = "rgb(16, 106, 121)";
+                                classElements[i].children[0].style.color = "white";
+                                //
+                                classElements[i].children[1].style.borderWidth = "2px 2px 2px 0px";
+                                classElements[i].children[1].style.borderColor = "gray";
+                                classElements[i].children[1].style.borderStyle = "solid";
+                                classElements[i].children[1].style.backgroundColor = "rgb(16, 106, 121)";
+                                classElements[i].children[1].style.color = "white";
+                                //
+                                // ACTIVE_TR[key] = classElements[i].id;
+                                // console.table(ACTIVE_TR);
+                            }
+                        }
+                    } else {
+                        element.children[0].style.border = "0px";
+                        element.children[0].style.backgroundColor = "#f9f9f9";
+                        element.children[0].style.color = "black";
+                        //
+                        element.children[1].style.border = "0px";
+                        element.children[1].style.backgroundColor = "#f9f9f9";
+                        element.children[1].style.color = "black";
+                        //
+                        // console.log(elementKey);
+                        ACTIVE_TR[elementKey] = "";
+
+                    }
+                }
+
+
+            }
+
+        }
+        //
+    </script>
+
+</body>
+
+</html>
